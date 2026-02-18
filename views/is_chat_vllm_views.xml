@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_is_chat_vllm" model="ir.sequence">
+        <field name="name">Chat VLLM</field>
+        <field name="code">is.chat.vllm</field>
+        <field name="prefix"></field>
+        <field name="padding">5</field>
+    </record>
+    <record id="is_chat_vllm_tree" model="ir.ui.view">
+        <field name="name">is.chat.vllm.tree</field>
+        <field name="model">is.chat.vllm</field>
+        <field name="arch" type="xml">
+            <tree string="Chat VLLM">
+                <field name="name"/>
+                <field name="question"/>
+                <field name="response" optional="hide"/>
+                <field name="create_date" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+    <record id="is_chat_vllm_form" model="ir.ui.view">
+        <field name="name">is.chat.vllm.form</field>
+        <field name="model">is.chat.vllm</field>
+        <field name="arch" type="xml">
+            <form string="Chat VLLM">
+                <sheet>
+                    <group>
+                            <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="question" placeholder="Posez votre question ici..."/>
+                    </group>
+                    <group>
+                        <field name="piece_jointe_ids" widget="many2many_binary" string="Pièces jointes"/>
+                    </group>
+
+                    <button name="action_send_question"
+                            type="object"
+                            string="Envoyer la question"
+                            class="oe_highlight"
+                            icon="fa-paper-plane"/>
+
+
+                    <group>
+                        <field name="temps_reponse"/>
+                        <field name="response"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="is_chat_vllm_action" model="ir.actions.act_window">
+        <field name="name">Chat VLLM</field>
+        <field name="res_model">is.chat.vllm</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre première conversation avec VLLM
+            </p>
+            <p>
+                Posez une question et obtenez une réponse du serveur VLLM.
+            </p>
+        </field>
+    </record>
+    <menuitem id="is_vllm_menu_root"
+              name="VLLM"
+              web_icon="is_vllm2odoo,static/description/icon.png"
+              sequence="100"/>
+
+    <menuitem id="is_vllm_menu_chat"
+              name="Chat VLLM"
+              parent="is_vllm_menu_root"
+              action="is_chat_vllm_action"
+              sequence="10"/>
+
+</odoo>

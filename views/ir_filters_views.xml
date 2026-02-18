@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================ -->
+    <!-- Héritage du formulaire ir.filters pour ajouter    -->
+    <!-- le champ "Demande à VLLM" en bas de la fiche     -->
+    <!-- ================================================ -->
+    <record id="ir_filters_view_form_vllm" model="ir.ui.view">
+        <field name="name">ir.filters.form.vllm</field>
+        <field name="model">ir.filters</field>
+        <field name="inherit_id" ref="base.ir_filters_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <separator string="Assistant VLLM"/>
+                <group>
+                    <field name="is_vllm_question"
+                           placeholder="Ex: Je veux voir uniquement les commandes confirmées du mois en cours..."
+                           widget="text"/>
+                    <button name="action_ask_vllm_domain"
+                            type="object"
+                            string="Demander à VLLM"
+                            class="oe_highlight"
+                            icon="fa-magic"/>
+                </group>
+                <group attrs="{'invisible': [('is_vllm_domain_backup', '=', False)]}">
+                    <field name="is_vllm_domain_backup"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================ -->
+    <!-- Vue Tree pour Mes Favoris (menu VLLM)            -->
+    <!-- ================================================ -->
+    <record id="is_ir_filters_vllm_tree" model="ir.ui.view">
+        <field name="name">ir.filters.vllm.tree</field>
+        <field name="model">ir.filters</field>
+        <field name="priority">950</field>
+        <field name="arch" type="xml">
+            <tree string="Mes Favoris" create="0">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="is_default" optional="show"/>
+                <field name="domain" optional="show"/>
+                <field name="action_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ================================================ -->
+    <!-- Action pour le menu Mes Favoris                  -->
+    <!-- ================================================ -->
+    <record id="is_action_ir_filters_vllm" model="ir.actions.act_window">
+        <field name="name">Mes Favoris</field>
+        <field name="res_model">ir.filters</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('is_ir_filters_vllm_tree')})]"/>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun favori trouvé
+            </p>
+            <p>
+                Vos favoris créés dans les différentes vues d'Odoo apparaîtront ici.
+                Vous pourrez utiliser VLLM pour modifier les domaines de vos filtres.
+            </p>
+        </field>
+    </record>
+
+    <!-- ================================================ -->
+    <!-- Menu sous VLLM                                   -->
+    <!-- ================================================ -->
+    <menuitem id="is_vllm_menu_favoris"
+              name="Mes Favoris"
+              parent="is_vllm_menu_root"
+              action="is_action_ir_filters_vllm"
+              sequence="20"/>
+
+</odoo>

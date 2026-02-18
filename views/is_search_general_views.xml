@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Séquence -->
+    <record id="seq_is_search_general" model="ir.sequence">
+        <field name="name">Recherche Générale</field>
+        <field name="code">is.search.general</field>
+        <field name="prefix">RG</field>
+        <field name="padding">5</field>
+    </record>
+
+    <!-- Vue Tree -->
+    <record id="is_search_general_tree" model="ir.ui.view">
+        <field name="name">is.search.general.tree</field>
+        <field name="model">is.search.general</field>
+        <field name="arch" type="xml">
+            <tree string="Recherche générale">
+                <field name="name"/>
+                <field name="question"/>
+                <field name="model_id"/>
+                <field name="domain" optional="show"/>
+                <field name="temps_reponse" optional="show"/>
+                <field name="create_date" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue Form -->
+    <record id="is_search_general_form" model="ir.ui.view">
+        <field name="name">is.search.general.form</field>
+        <field name="model">is.search.general</field>
+        <field name="arch" type="xml">
+            <form string="Recherche générale">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="question"
+                               placeholder="Ex: Liste des factures de ce mois, Contacts à Lyon, Commandes confirmées..."
+                               widget="text"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="model_id"
+                                   placeholder="Laisser vide pour détection automatique par VLLM"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+
+                    <div class="d-flex gap-2 mb-3">
+                        <button name="action_search"
+                                type="object"
+                                string="Rechercher"
+                                class="oe_highlight"
+                                icon="fa-search"/>
+                        <button name="action_open_results"
+                                type="object"
+                                string="Voir les résultats"
+                                icon="fa-list"
+                                attrs="{'invisible': [('domain', '=', False)]}"/>
+                    </div>
+
+                    <group string="Résultat" attrs="{'invisible': [('domain', '=', False)]}">
+                        <group>
+                            <field name="model_name"/>
+                            <field name="temps_reponse"/>
+                            <field name="domain"/>
+                            <field name="nb_results"/>
+                            <button name="action_save_as_filter"
+                                    type="object"
+                                    string="Enregistrer comme favori"
+                                    class="btn btn-secondary"
+                                    icon="fa-star"/>
+                        </group>
+                    </group>
+                    <group string="Détails VLLM" attrs="{'invisible': [('vllm_model_response', '=', False), ('vllm_domain_response', '=', False)]}">
+                        <field name="vllm_model_response" attrs="{'invisible': [('vllm_model_response', '=', False)]}"/>
+                        <field name="vllm_domain_response" attrs="{'invisible': [('vllm_domain_response', '=', False)]}"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="is_search_general_action" model="ir.actions.act_window">
+        <field name="name">Recherche générale</field>
+        <field name="res_model">is.search.general</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Lancer une recherche générale
+            </p>
+            <p>
+                Décrivez ce que vous cherchez en langage naturel.
+                VLLM identifiera le bon modèle et générera le filtre automatiquement.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="is_vllm_menu_search_general"
+              name="Recherche générale"
+              parent="is_vllm_menu_root"
+              action="is_search_general_action"
+              sequence="5"/>
+
+</odoo>
