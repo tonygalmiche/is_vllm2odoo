@@ -67,15 +67,5 @@
             </p>
         </field>
     </record>
-    <menuitem id="is_vllm_menu_root"
-              name="VLLM"
-              web_icon="is_vllm2odoo,static/description/icon.png"
-              sequence="100"/>
-
-    <menuitem id="is_vllm_menu_chat"
-              name="Chat VLLM"
-              parent="is_vllm_menu_root"
-              action="is_chat_vllm_action"
-              sequence="10"/>
 
 </odoo>

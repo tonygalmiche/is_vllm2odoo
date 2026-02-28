@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================ -->
+    <!-- Menu racine VLLM                                 -->
+    <!-- ================================================ -->
+    <menuitem id="is_vllm_menu_root"
+              name="IA"
+              web_icon="is_vllm2odoo,static/description/icon.png"
+              groups="is_vllm2odoo.group_ia_recherche_generale"
+              sequence="100"/>
+
+    <!-- ================================================ -->
+    <!-- Menu Recherche générale                          -->
+    <!-- ================================================ -->
+    <menuitem id="is_vllm_menu_search_general"
+              name="Recherche générale"
+              parent="is_vllm_menu_root"
+              action="is_search_general_action"
+              groups="is_vllm2odoo.group_ia_recherche_generale"
+              sequence="5"/>
+
+    <!-- ================================================ -->
+    <!-- Menu Chat VLLM                                   -->
+    <!-- ================================================ -->
+    <menuitem id="is_vllm_menu_chat"
+              name="Chat IA"
+              parent="is_vllm_menu_root"
+              action="is_chat_vllm_action"
+              groups="is_vllm2odoo.group_ia_admin"
+              sequence="10"/>
+
+    <!-- ================================================ -->
+    <!-- Menu Mes Favoris                                 -->
+    <!-- ================================================ -->
+    <menuitem id="is_vllm_menu_favoris"
+              name="Mes Favoris"
+              parent="is_vllm_menu_root"
+              action="is_action_ir_filters_vllm"
+              groups="is_vllm2odoo.group_ia_admin"
+              sequence="20"/>
+
+</odoo>

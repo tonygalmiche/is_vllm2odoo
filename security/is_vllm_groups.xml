@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ================================================ -->
+        <!-- Catégorie de module : IA                         -->
+        <!-- ================================================ -->
+        <record id="module_category_ia" model="ir.module.category">
+            <field name="name">IA</field>
+            <field name="description">Intelligence Artificielle / VLLM</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- ================================================ -->
+        <!-- Groupe : Recherche générale                      -->
+        <!-- Accès à IsSearchGeneral et au menu associé       -->
+        <!-- ================================================ -->
+        <record id="group_ia_recherche_generale" model="res.groups">
+            <field name="name">Recherche générale</field>
+            <field name="category_id" ref="module_category_ia"/>
+            <field name="comment">Accès à la recherche générale VLLM et au menu associé</field>
+        </record>
+
+        <!-- ================================================ -->
+        <!-- Groupe : Administrateur                          -->
+        <!-- Accès à tous les modèles du module et aux menus  -->
+        <!-- ================================================ -->
+        <record id="group_ia_admin" model="res.groups">
+            <field name="name">Administrateur</field>
+            <field name="category_id" ref="module_category_ia"/>
+            <field name="implied_ids" eval="[(4, ref('group_ia_recherche_generale'))]"/>
+            <field name="comment">Accès complet à tous les modèles VLLM et aux menus associés</field>
+        </record>
+
+    </data>
+</odoo>

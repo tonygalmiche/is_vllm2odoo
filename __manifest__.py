@@ -11,14 +11,18 @@
     'license': 'LGPL-3',
     'depends': ['base', 'mail'],
     'data': [
+        'security/is_vllm_groups.xml',
         'security/ir.model.access.csv',
         'security/is_chat_vllm_rules.xml',
+        'security/is_search_general_rules.xml',
         'views/is_chat_vllm_views.xml',
         'views/is_search_general_views.xml',
         'views/ir_filters_views.xml',
         'views/res_company_views.xml',
+        'views/menu.xml',
     ],
     'installable': True,
     'application': True,
     'auto_install': False,
+    'post_init_hook': 'post_init_hook',
 }

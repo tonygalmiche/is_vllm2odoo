@@ -9,6 +9,84 @@
         <field name="padding">5</field>
     </record>
 
+    <!-- Vue Kanban -->
+    <record id="is_search_general_kanban" model="ir.ui.view">
+        <field name="name">is.search.general.kanban</field>
+        <field name="model">is.search.general</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="question"/>
+                <field name="model_id"/>
+                <field name="view_type"/>
+                <field name="domain"/>
+                <field name="nb_results"/>
+                <field name="temps_reponse"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb-2">
+                                <div class="o_kanban_record_headings">
+                                    <span t-if="record.model_id.raw_value" 
+                                          class="badge badge-pill"
+                                          t-attf-style="background-color: #{record.model_id.raw_value % 10 == 0 ? '#17a2b8' : record.model_id.raw_value % 10 == 1 ? '#28a745' : record.model_id.raw_value % 10 == 2 ? '#ffc107' : record.model_id.raw_value % 10 == 3 ? '#dc3545' : record.model_id.raw_value % 10 == 4 ? '#6f42c1' : record.model_id.raw_value % 10 == 5 ? '#fd7e14' : record.model_id.raw_value % 10 == 6 ? '#20c997' : record.model_id.raw_value % 10 == 7 ? '#e83e8c' : record.model_id.raw_value % 10 == 8 ? '#6610f2' : '#007bff'}; color: white; font-weight: bold;">
+                                        <field name="model_id"/>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_title" style="margin-left: auto;">
+                                    <button t-if="record.nb_results.raw_value" 
+                                            name="action_open_results" 
+                                            type="object" 
+                                            class="btn btn-link p-0"
+                                            style="text-decoration: none;">
+                                        <span style="margin-right: 5px;"><field name="nb_results"/></span>
+                                        <span t-if="record.view_type.raw_value == 'graph'" 
+                                              class="badge badge-pill" 
+                                              style="background-color: #17a2b8; color: white; font-weight: bold;">
+                                            <i class="fa fa-bar-chart" title="Voir le graphique"/>
+                                        </span>
+                                        <span t-elif="record.view_type.raw_value == 'pivot'" 
+                                              class="badge badge-pill" 
+                                              style="background-color: #28a745; color: white; font-weight: bold;">
+                                            <i class="fa fa-table" title="Voir le tableau croisé"/>
+                                        </span>
+                                        <span t-else="" 
+                                              class="badge badge-pill" 
+                                              style="background-color: #6c757d; color: white; font-weight: bold;">
+                                            <i class="fa fa-list" title="Voir la liste"/>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div style="background-color: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
+                                    <strong><field name="question"/></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vue Search -->
+    <record id="is_search_general_search" model="ir.ui.view">
+        <field name="name">is.search.general.search</field>
+        <field name="model">is.search.general</field>
+        <field name="arch" type="xml">
+            <search string="Recherche générale">
+                <field name="question" string="Recherche" filter_domain="[('question', 'ilike', self)]"/>
+                <field name="model_id" string="Modèle"/>
+                <field name="name" string="Numéro"/>
+                <filter name="my_searches" string="Mes recherches" domain="[('create_uid', '=', uid)]"/>
+                <separator/>
+                <filter name="group_by_model" string="Modèle" context="{'group_by': 'model_id'}"/>
+                <filter name="group_by_view_type" string="Type de vue" context="{'group_by': 'view_type'}"/>
+            </search>
+        </field>
+    </record>
+
     <!-- Vue Tree -->
     <record id="is_search_general_tree" model="ir.ui.view">
         <field name="name">is.search.general.tree</field>
@@ -18,6 +96,8 @@
                 <field name="name"/>
                 <field name="question"/>
                 <field name="model_id"/>
+                <field name="view_type" optional="show"/>
+                <field name="group_by" optional="hide"/>
                 <field name="domain" optional="show"/>
                 <field name="temps_reponse" optional="show"/>
                 <field name="create_date" optional="hide"/>
@@ -31,10 +111,32 @@
         <field name="model">is.search.general</field>
         <field name="arch" type="xml">
             <form string="Recherche générale">
+                <header>
+                    <button name="action_search"
+                            type="object"
+                            string="Actualiser la recherche"
+                            class="oe_highlight"
+                            icon="fa-search"/>
+                    <button name="action_open_results"
+                            type="object"
+                            string="Voir le résultat"
+                            icon="fa-list"
+                            attrs="{'invisible': [('domain', '=', False)]}"/>
+                    <button name="action_save_as_filter"
+                            type="object"
+                            string="Enregistrer comme favori"
+                            icon="fa-star"
+                            attrs="{'invisible': ['|', ('domain', '=', False), ('filter_id', '!=', False)]}"/>
+                    <button name="action_save_as_filter"
+                            type="object"
+                            string="Mettre à jour le favori"
+                            icon="fa-star"
+                            attrs="{'invisible': ['|', ('domain', '=', False), ('filter_id', '=', False)]}"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
-                            <field name="name"/>
+                            <field name="name" invisible="1"/>
                         </group>
                     </group>
                     <group>
@@ -47,39 +149,54 @@
                             <field name="model_id"
                                    placeholder="Laisser vide pour détection automatique par VLLM"
                                    options="{'no_create': True}"/>
+
+                            <field name="view_type"
+                                   placeholder="Laisser vide pour détection automatique par VLLM"/>
+ 
+
                         </group>
                     </group>
+                    <notebook attrs="{'invisible': [('domain', '=', False)]}">
+                        <page string="Recherche" name="result">
+                            <separator string="Domaine de recherche"/>
+                            <field name="domain" widget="domain" options="{'model': 'model_name'}"/>
+                            <group>
+                                <field name="group_by"
+                                    placeholder="Ex: create_date:year, partner_id..."
+                                    attrs="{'invisible': [('view_type', 'not in', ['graph', 'pivot'])]}"/>
+                            </group>
+                        </page>
+                        <page string="Détails techniques" name="technical">
 
-                    <div class="d-flex gap-2 mb-3">
-                        <button name="action_search"
-                                type="object"
-                                string="Rechercher"
-                                class="oe_highlight"
-                                icon="fa-search"/>
-                        <button name="action_open_results"
-                                type="object"
-                                string="Voir les résultats"
-                                icon="fa-list"
-                                attrs="{'invisible': [('domain', '=', False)]}"/>
-                    </div>
+                            <group>
+                                <group>
+                                    <field name="model_name"/>
+                                    <field name="nb_results"/>
+                                    <field name="filter_id" attrs="{'invisible': [('filter_id', '=', False)]}"/>
+                                </group>
+                            </group>
 
-                    <group string="Résultat" attrs="{'invisible': [('domain', '=', False)]}">
-                        <group>
-                            <field name="model_name"/>
-                            <field name="temps_reponse"/>
-                            <field name="domain"/>
-                            <field name="nb_results"/>
-                            <button name="action_save_as_filter"
-                                    type="object"
-                                    string="Enregistrer comme favori"
-                                    class="btn btn-secondary"
-                                    icon="fa-star"/>
-                        </group>
-                    </group>
-                    <group string="Détails VLLM" attrs="{'invisible': [('vllm_model_response', '=', False), ('vllm_domain_response', '=', False)]}">
-                        <field name="vllm_model_response" attrs="{'invisible': [('vllm_model_response', '=', False)]}"/>
-                        <field name="vllm_domain_response" attrs="{'invisible': [('vllm_domain_response', '=', False)]}"/>
-                    </group>
+
+
+                            <group string="Paramètres de vue">
+                                <group>
+                                    <field name="view_type"/>
+                                    <field name="group_by" 
+                                           placeholder="Ex: create_date:year, partner_id..."
+                                           attrs="{'invisible': [('view_type', 'not in', ['graph', 'pivot'])]}"/>
+                                </group>
+                                <group>
+                                    <field name="temps_reponse"/>
+                                </group>
+                            </group>
+                            <group string="Réponses VLLM" attrs="{'invisible': [('vllm_model_response', '=', False), ('vllm_domain_response', '=', False)]}">
+                                <field name="vllm_model_response" attrs="{'invisible': [('vllm_model_response', '=', False)]}"/>
+                                <field name="vllm_domain_response" attrs="{'invisible': [('vllm_domain_response', '=', False)]}"/>
+                                <field name="vllm_view_type_response" attrs="{'invisible': [('vllm_view_type_response', '=', False)]}"/>
+                                <field name="vllm_group_by_response" attrs="{'invisible': [('vllm_group_by_response', '=', False)]}"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -93,7 +210,8 @@
     <record id="is_search_general_action" model="ir.actions.act_window">
         <field name="name">Recherche générale</field>
         <field name="res_model">is.search.general</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_my_searches': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Lancer une recherche générale
@@ -104,12 +222,5 @@
             </p>
         </field>
     </record>
-
-    <!-- Menu -->
-    <menuitem id="is_vllm_menu_search_general"
-              name="Recherche générale"
-              parent="is_vllm_menu_root"
-              action="is_search_general_action"
-              sequence="5"/>
 
 </odoo>

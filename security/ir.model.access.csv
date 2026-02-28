@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_is_chat_vllm_user,is.chat.vllm.user,model_is_chat_vllm,base.group_user,1,1,1,1
-access_is_search_general_user,is.search.general.user,model_is_search_general,base.group_user,1,1,1,1
+access_is_search_general_user,is.search.general.user,model_is_search_general,group_ia_recherche_generale,1,1,1,1
+access_is_chat_vllm_admin,is.chat.vllm.admin,model_is_chat_vllm,group_ia_admin,1,1,1,1
+access_is_search_general_admin,is.search.general.admin,model_is_search_general,group_ia_admin,1,1,1,1
+access_is_vllm_admin,is.vllm.admin,model_is_vllm,group_ia_admin,1,1,1,1

@@ -68,13 +68,4 @@
         </field>
     </record>
 
-    <!-- ================================================ -->
-    <!-- Menu sous VLLM                                   -->
-    <!-- ================================================ -->
-    <menuitem id="is_vllm_menu_favoris"
-              name="Mes Favoris"
-              parent="is_vllm_menu_root"
-              action="is_action_ir_filters_vllm"
-              sequence="20"/>
-
 </odoo>
