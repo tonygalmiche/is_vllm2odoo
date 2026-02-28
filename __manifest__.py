@@ -17,7 +17,7 @@
         'security/is_search_general_rules.xml',
         'views/is_chat_vllm_views.xml',
         'views/is_search_general_views.xml',
-        'views/ir_filters_views.xml',
+        # 'views/ir_filters_views.xml',
         'views/res_company_views.xml',
         'views/menu.xml',
     ],

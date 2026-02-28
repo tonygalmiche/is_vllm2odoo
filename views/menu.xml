@@ -8,7 +8,7 @@
               name="IA"
               web_icon="is_vllm2odoo,static/description/icon.png"
               groups="is_vllm2odoo.group_ia_recherche_generale"
-              sequence="100"/>
+              sequence="0"/>
 
     <!-- ================================================ -->
     <!-- Menu Recherche générale                          -->
@@ -33,11 +33,11 @@
     <!-- ================================================ -->
     <!-- Menu Mes Favoris                                 -->
     <!-- ================================================ -->
-    <menuitem id="is_vllm_menu_favoris"
+    <!-- <menuitem id="is_vllm_menu_favoris"
               name="Mes Favoris"
               parent="is_vllm_menu_root"
               action="is_action_ir_filters_vllm"
               groups="is_vllm2odoo.group_ia_admin"
-              sequence="20"/>
+              sequence="20"/> -->
 
 </odoo>

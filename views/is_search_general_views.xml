@@ -93,14 +93,16 @@
         <field name="model">is.search.general</field>
         <field name="arch" type="xml">
             <tree string="Recherche générale">
-                <field name="name"/>
-                <field name="question"/>
                 <field name="model_id"/>
-                <field name="view_type" optional="show"/>
-                <field name="group_by" optional="hide"/>
-                <field name="domain" optional="show"/>
-                <field name="temps_reponse" optional="show"/>
-                <field name="create_date" optional="hide"/>
+                <field name="question"/>
+                <field name="view_type"     optional="show"/>
+                <field name="group_by"      optional="hide"/>
+                <field name="domain"        optional="hide"/>
+                <field name="temps_reponse" optional="hide"/>
+                <field name="create_date"   optional="hide" string="Créé le"/>
+                <field name="create_uid"    optional="hide" string="Créé par"/>
+                <field name="write_date"    optional="hide" string="Modifié le"/>
+                <field name="write_uid"     optional="hide" string="Modifié par"/>
             </tree>
         </field>
     </record>
@@ -147,11 +149,11 @@
                     <group>
                         <group>
                             <field name="model_id"
-                                   placeholder="Laisser vide pour détection automatique par VLLM"
+                                   placeholder="Laisser vide pour détection automatique par IA"
                                    options="{'no_create': True}"/>
 
                             <field name="view_type"
-                                   placeholder="Laisser vide pour détection automatique par VLLM"/>
+                                   placeholder="Laisser vide pour détection automatique par IA"/>
  
 
                         </group>
@@ -189,7 +191,7 @@
                                     <field name="temps_reponse"/>
                                 </group>
                             </group>
-                            <group string="Réponses VLLM" attrs="{'invisible': [('vllm_model_response', '=', False), ('vllm_domain_response', '=', False)]}">
+                            <group string="Réponses IA" attrs="{'invisible': [('vllm_model_response', '=', False), ('vllm_domain_response', '=', False)]}">
                                 <field name="vllm_model_response" attrs="{'invisible': [('vllm_model_response', '=', False)]}"/>
                                 <field name="vllm_domain_response" attrs="{'invisible': [('vllm_domain_response', '=', False)]}"/>
                                 <field name="vllm_view_type_response" attrs="{'invisible': [('vllm_view_type_response', '=', False)]}"/>
@@ -218,7 +220,7 @@
             </p>
             <p>
                 Décrivez ce que vous cherchez en langage naturel.
-                VLLM identifiera le bon modèle et générera le filtre automatiquement.
+                L'IA identifiera le bon modèle et générera le filtre automatiquement.
             </p>
         </field>
     </record>
