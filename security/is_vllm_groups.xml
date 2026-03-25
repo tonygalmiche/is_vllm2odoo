@@ -22,13 +22,24 @@
         </record>
 
         <!-- ================================================ -->
+        <!-- Groupe : Gestionnaire des prompts                -->
+        <!-- Accès à la gestion des prompts IA                -->
+        <!-- ================================================ -->
+        <record id="group_ia_gestionnaire_prompts" model="res.groups">
+            <field name="name">Gestionnaire des prompts</field>
+            <field name="category_id" ref="module_category_ia"/>
+            <field name="implied_ids" eval="[(4, ref('group_ia_recherche_generale'))]"/>
+            <field name="comment">Accès à la gestion des prompts IA et à l'analyse IA</field>
+        </record>
+
+        <!-- ================================================ -->
         <!-- Groupe : Administrateur                          -->
         <!-- Accès à tous les modèles du module et aux menus  -->
         <!-- ================================================ -->
         <record id="group_ia_admin" model="res.groups">
             <field name="name">Administrateur</field>
             <field name="category_id" ref="module_category_ia"/>
-            <field name="implied_ids" eval="[(4, ref('group_ia_recherche_generale'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_ia_recherche_generale')), (4, ref('group_ia_gestionnaire_prompts'))]"/>
             <field name="comment">Accès complet à tous les modèles VLLM et aux menus associés</field>
         </record>
 

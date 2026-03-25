@@ -48,10 +48,10 @@ class IsVllm(models.AbstractModel):
 
         images_b64 = []
         try:
-            pages = convert_from_bytes(pdf_data, dpi=200)
+            pages = convert_from_bytes(pdf_data, dpi=150)
             for page in pages:
                 buf = io.BytesIO()
-                page.save(buf, format='PNG')
+                page.save(buf, format='JPEG', quality=80)
                 img_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
                 images_b64.append(img_b64)
         except Exception as e:
@@ -142,7 +142,13 @@ class IsVllm(models.AbstractModel):
             _logger.error(msg)
             return {'success': False, 'response': '', 'error': msg}
         except requests.exceptions.HTTPError as e:
-            msg = "Erreur HTTP du serveur VLLM : %s" % str(e)
+            # Récupérer le corps de la réponse pour avoir le détail de l'erreur
+            detail = ''
+            try:
+                detail = e.response.text[:500] if e.response is not None else ''
+            except Exception:
+                pass
+            msg = "Erreur HTTP du serveur VLLM : %s\nDétail : %s" % (str(e), detail)
             _logger.error(msg)
             return {'success': False, 'response': '', 'error': msg}
         except Exception as e:
