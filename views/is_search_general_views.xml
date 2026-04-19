@@ -166,6 +166,9 @@
                                 <field name="group_by"
                                     placeholder="Ex: create_date:year, partner_id..."
                                     attrs="{'invisible': [('view_type', 'not in', ['graph', 'pivot'])]}"/>
+                                <field name="measure"
+                                    placeholder="Ex: amount_total, __count..."
+                                    attrs="{'invisible': [('view_type', 'not in', ['graph', 'pivot'])]}"/>
                             </group>
                         </page>
                         <page string="Détails techniques" name="technical">
@@ -186,6 +189,9 @@
                                     <field name="group_by" 
                                            placeholder="Ex: create_date:year, partner_id..."
                                            attrs="{'invisible': [('view_type', 'not in', ['graph', 'pivot'])]}"/>
+                                    <field name="measure"
+                                           placeholder="Ex: amount_total, __count..."
+                                           attrs="{'invisible': [('view_type', 'not in', ['graph', 'pivot'])]}"/>
                                 </group>
                                 <group>
                                     <field name="temps_reponse"/>
@@ -196,11 +202,12 @@
                                 <field name="vllm_domain_response" attrs="{'invisible': [('vllm_domain_response', '=', False)]}"/>
                                 <field name="vllm_view_type_response" attrs="{'invisible': [('vllm_view_type_response', '=', False)]}"/>
                                 <field name="vllm_group_by_response" attrs="{'invisible': [('vllm_group_by_response', '=', False)]}"/>
+                                <field name="vllm_measure_response" attrs="{'invisible': [('vllm_measure_response', '=', False)]}"/>
                             </group>
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
+                <div class="oe_chatter" groups="base.group_no_one">
                     <field name="message_follower_ids"/>
                     <field name="message_ids"/>
                 </div>
