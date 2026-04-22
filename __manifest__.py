@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Intégration de VLLM dans  Odoo',
-    'version': '16.0.1.1.1',
+    'version': '16.0.1.1.2',
     'summary': 'Module Odoo 16 générique pour intégrer VLLM',
     'description': """
     """,

@@ -77,9 +77,12 @@ class IsVllm(models.AbstractModel):
             return {'success': False, 'response': '', 'error': "L'URL du serveur VLLM n'est pas configurée dans la fiche société."}
 
         # Construire l'URL de l'endpoint
-        if not url.endswith('/'):
-            url += '/'
-        endpoint = url + 'v1/chat/completions'
+        # Si l'URL se termine déjà par 'v1/chat/completions', l'utiliser telle quelle
+        url_stripped = url.rstrip('/')
+        if url_stripped.endswith('v1/chat/completions'):
+            endpoint = url_stripped
+        else:
+            endpoint = url_stripped + '/v1/chat/completions'
 
         # Construire les messages
         messages = []
