@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Intégration de VLLM dans  Odoo',
-    'version': '16.0.1.1.0',
-    'summary': 'Module Odoo 16 pour Plastigray pour intégrer VLLM',
+    'version': '16.0.1.1.1',
+    'summary': 'Module Odoo 16 générique pour intégrer VLLM',
     'description': """
     """,
     "author"   : "InfoSaône",
