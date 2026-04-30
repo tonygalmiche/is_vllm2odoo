@@ -121,6 +121,32 @@ class IsSearchGeneral(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('is.search.general') or 'Nouveau'
         return super().create(vals_list)
 
+    def read(self, fields=None, load='_classic_read'):
+        result = super().read(fields=fields, load=load)
+        if fields and 'domain' not in fields:
+            return result
+        for record in result:
+            domain_str = record.get('domain')
+            if not domain_str:
+                continue
+            # Récupérer le model_name depuis l'enregistrement ou la base
+            model_name = record.get('model_name')
+            if not model_name:
+                rec = self.browse(record['id'])
+                model_name = rec.model_name
+            if not model_name or model_name not in self.env:
+                continue
+            try:
+                domain = safe_eval(domain_str, {'datetime': datetime})
+                self.env[model_name].search_count(domain)
+            except Exception:
+                _logger.warning(
+                    "Domaine invalide pour is.search.general id=%s (modèle=%s) : %s",
+                    record['id'], model_name, domain_str,
+                )
+                record['domain'] = False
+        return result
+
     def _get_installed_models_list(self):
         """Retourne la liste des modèles installés avec leur description."""
         models = self.env['ir.model'].sudo().search([

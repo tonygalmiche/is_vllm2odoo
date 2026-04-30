@@ -3,8 +3,6 @@
     'name': 'Intégration de VLLM dans  Odoo',
     'version': '16.0.1.1.2',
     'summary': 'Module Odoo 16 générique pour intégrer VLLM',
-    'description': """
-    """,
     "author"   : "InfoSaône",
     "category" : "InfoSaône",
     'website': '',
@@ -17,7 +15,6 @@
         'security/is_search_general_rules.xml',
         'views/is_chat_vllm_views.xml',
         'views/is_search_general_views.xml',
-        # 'views/ir_filters_views.xml',
         'views/res_company_views.xml',
         'views/menu.xml',
     ],
