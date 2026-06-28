@@ -114,6 +114,14 @@ class IsSearchGeneral(models.Model):
         help="Lien vers le favori créé à partir de cette recherche.",
     )
 
+    @api.onchange('model_id')
+    def _onchange_model_id(self):
+        self.domain = False
+        self.group_by = False
+        self.measure = False
+        self.view_type = False
+        self.nb_results = 0
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -614,29 +622,23 @@ class IsSearchGeneral(models.Model):
         if not self.model_name or not self.domain:
             raise UserError("Lancez d'abord une recherche.")
 
-        # Chercher l'action principale du modèle pour l'associer au filtre
-        action = self.env['ir.actions.act_window'].sudo().search([
-            ('res_model', '=', self.model_name),
-            ('view_mode', 'ilike', 'tree'),
-        ], limit=1)
-
         filter_vals = {
             'name': self.question[:80] if self.question else 'Recherche générale',
             'model_id': self.model_name,
             'domain': self.domain,
             'user_id': self.env.uid,
-            'action_id': action.id if action else False,
+            'action_id': False,
             'is_default': False,
         }
 
         if self.filter_id:
             # Mettre à jour le filtre existant
-            self.filter_id.write(filter_vals)
+            self.filter_id.sudo().write(filter_vals)
             message = 'Le favori a été mis à jour.'
             title = 'Favori mis à jour'
         else:
             # Créer un nouveau filtre
-            new_filter = self.env['ir.filters'].create(filter_vals)
+            new_filter = self.env['ir.filters'].sudo().create(filter_vals)
             self.filter_id = new_filter.id
             message = 'Le filtre a été ajouté à vos favoris.'
             title = 'Favori enregistré'
@@ -674,6 +676,39 @@ class IsSearchGeneral(models.Model):
         except Exception:
             return 0
 
+    def _validate_group_by(self, model_name, gb_list):
+        """Filtre la liste group_by : supprime les champs inexistants et retire la granularité sur les non-dates."""
+        DATE_GRANULARITIES = ('year', 'quarter', 'month', 'week', 'day')
+        DATE_TYPES = ('date', 'datetime')
+        try:
+            model_obj = self.env[model_name]
+        except KeyError:
+            return gb_list
+        result = []
+        for gb in gb_list:
+            if ':' in gb:
+                fname, granularity = gb.split(':', 1)
+                if granularity not in DATE_GRANULARITIES:
+                    fname_clean = fname
+                else:
+                    fname_clean = fname
+                field = model_obj._fields.get(fname_clean)
+                if field is None:
+                    _logger.warning("group_by: champ '%s' inexistant sur %s, ignoré", fname_clean, model_name)
+                    continue
+                if field.type not in DATE_TYPES:
+                    _logger.warning("group_by: '%s' n'est pas date/datetime sur %s, granularité supprimée", fname_clean, model_name)
+                    result.append(fname_clean)
+                else:
+                    result.append(gb)
+            else:
+                field = model_obj._fields.get(gb)
+                if field is None:
+                    _logger.warning("group_by: champ '%s' inexistant sur %s, ignoré", gb, model_name)
+                    continue
+                result.append(gb)
+        return result
+
     def _open_result_list(self, model_name, domain_str, view_type='tree', group_by=None, measure=None):
         """Ouvre la vue du modèle avec le domaine donné et le type de vue approprié."""
         try:
@@ -706,6 +741,7 @@ class IsSearchGeneral(models.Model):
             context = {}
             if group_by:
                 gb_list = group_by if isinstance(group_by, list) else [g.strip() for g in group_by.split(',') if g.strip()]
+                gb_list = self._validate_group_by(model_name, gb_list)
                 if view_type == 'pivot' and len(gb_list) >= 2:
                     context['pivot_row_groupby'] = [gb_list[0]]
                     context['pivot_column_groupby'] = [gb_list[1]]
