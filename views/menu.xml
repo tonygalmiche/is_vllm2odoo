@@ -8,7 +8,7 @@
               name="IA"
               web_icon="is_vllm2odoo,static/description/icon.png"
               groups="is_vllm2odoo.group_ia_recherche_generale"
-              sequence="0"/>
+              sequence="497"/>
 
     <!-- ================================================ -->
     <!-- Menu Recherche générale                          -->
